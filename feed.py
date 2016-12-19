@@ -24,18 +24,24 @@ last_checked = datetime.datetime.utcnow() - datetime.timedelta(days=10)
 #     last_checked = datetime.datetime.utcnow()
 #     time.sleep(10)
 
-BUILD_REGEX = re.compile(r'::(?P<artifact>[\w\s]*)#(?P<version>\w*-[\d\w.]*)\s(?P<status>[\w\s]*)')
+BUILD_REGEX = re.compile(r'^(?P<artifact>[\w\s]*)#(?P<version>\w*-[\d\w.]*)\s(?P<status>[\w\s]*)$')
 
 
 def get_builds():
     entries = feedparser.parse(URL)
     builds = []
     for entry in [e for e in entries['entries']]:
-        match = BUILD_REGEX.match(entry['title'])
+        title = entry['title'].split('::')[-1]
+        match = BUILD_REGEX.match(title)
+
+        if not match:
+            continue
+
         builds.append({
             'artifact': match.group('artifact'),
             'version': match.group('version'),
-            'status': match.group('status')
+            'status': match.group('status'),
+            'timestamp': entry['updated_parsed']
         })
 
     return builds

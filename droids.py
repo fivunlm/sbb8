@@ -44,7 +44,7 @@ class Sbb8(threading.Thread):
         logging.debug('Processing command [%s]' % message.payload)
         for c in COMMANDS:
             if c['regex'].match(message.payload):
-                return c['command']()
+                return c['command'](c['regex'], message.payload)
 
         logging.error('Command not executed %s' % message.payload)
         return "Do not understand the command"
