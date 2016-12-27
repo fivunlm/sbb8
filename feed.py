@@ -2,30 +2,10 @@ import datetime
 import os
 
 import feedparser
-import time
-
-import logging
 
 import re
 
 URL = os.environ.get('FEED_URL')
-
-last_checked = datetime.datetime.utcnow() - datetime.timedelta(days=10)
-
-#
-# while True:
-#     entries = feedparser.parse(URL)
-#
-#     for entry in [e for e in entries['entries']]:
-#         if 'failed' in entry['title']:
-#             raw_data = entry['title'].split('::')
-#             entry_date = datetime.datetime.strptime(entry['updated'], '%Y-%m-%dT%H:%M:%SZ')
-#             if entry_date > last_checked:
-#                 print(entry['date'] + ' ' + raw_data[3])
-#
-#     last_checked = datetime.datetime.utcnow()
-#     time.sleep(10)
-
 BUILD_REGEX = re.compile(r'^(?P<artifact>[\w\s]*)#(?P<version>\w*-[\d\w.]*)\s(?P<status>[\w\s]*)$')
 
 
